@@ -50,15 +50,6 @@ Evidence Snapshot
 
 $1.03 Trillion — Estimated economic loss in India from mental-health conditions (2012–2030)
 
-💡 Our Approach
-An explainable, rule-based expert system that converts a short check-in into a risk flag.
-
-text
-┌─────────┐    ┌─────────┐    ┌─────────┐    ┌──────────────┐
-│  INPUT  │ →  │  RULES  │ →  │  SCORE  │ →  │     FLAG     │
-│ Check-in│    │Weighted │    │ 0–8 pts │    │ OK/Moderate/ │
-│         │    │ signals │    │         │    │    High      │
-└─────────┘    └─────────┘    └─────────┘    └──────────────┘
 Why Rule-Based AI?
 ✅ Explainable — every point maps to an explicit rule
 
