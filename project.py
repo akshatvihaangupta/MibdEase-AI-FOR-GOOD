@@ -1,20 +1,17 @@
-# ============================================================
-#   MENTAL HEALTH CHECK-IN PORTAL  (Single File, No Backend)
-#   File: project.py
-#   Run : python project.py
-# ============================================================
+
+# MENTAL HEALTH CHECK-IN PORTAL 
+# python project.py
+
 
 import json
 import os
 from datetime import datetime
 
-# ---------- FILE PATHS ----------
+# FILE PATHS 
 ALERT_LOG   = "admin_alerts.log"
 STUDENT_DB  = "students.json"
 
-# ============================================================
-#   ADMIN ALERT FUNCTION (simulated server)
-# ============================================================
+#   ADMIN ALERT FUNCTION
 def send_alert_to_admin(student_data, status, score, reasons):
     alert = {
         "type": "MENTAL_HEALTH_ALERT",
@@ -36,7 +33,7 @@ def send_alert_to_admin(student_data, status, score, reasons):
     }
 
     print("\n" + "=" * 60)
-    print("🚨 ALERT SENT TO ADMIN SERVER 🚨")
+    print(" ALERT SENT TO ADMIN SERVER ")
     print("=" * 60)
     print(json.dumps(alert, indent=2))
     print("=" * 60)
@@ -44,14 +41,12 @@ def send_alert_to_admin(student_data, status, score, reasons):
     try:
         with open(ALERT_LOG, "a", encoding="utf-8") as f:
             f.write(json.dumps(alert) + "\n")
-        print(f"✅ Alert saved to {ALERT_LOG}")
+        print(f" Alert saved to {ALERT_LOG}")
     except Exception as e:
-        print("❌ Could not save alert log:", e)
+        print(" Could not save alert log:", e)
 
 
-# ============================================================
-#   SCORING LOGIC (rule-based — NOT a diagnosis)
-# ============================================================
+#   SCORING LOGIC 
 def evaluate_student(data):
     score = 0
     reasons = []
@@ -103,18 +98,16 @@ def evaluate_student(data):
     return status, score, reasons
 
 
-# ============================================================
 #   INPUT HELPERS
-# ============================================================
 def get_int(prompt, min_val, max_val):
     while True:
         try:
             val = int(input(prompt).strip())
             if min_val <= val <= max_val:
                 return val
-            print(f"⚠️  Please enter a number between {min_val} and {max_val}.")
+            print(f" Please enter a number between {min_val} and {max_val}.")
         except ValueError:
-            print("⚠️  Invalid input. Please enter a number.")
+            print(" Invalid input. Please enter a number.")
 
 
 def get_yes_no(prompt):
@@ -124,7 +117,7 @@ def get_yes_no(prompt):
             return True
         if ans in ("no", "n"):
             return False
-        print("⚠️  Please answer 'yes' or 'no'.")
+        print(" Please answer 'yes' or 'no'.")
 
 
 def get_choice(prompt, options):
@@ -137,14 +130,11 @@ def get_choice(prompt, options):
             idx = int(input("Enter choice number: ").strip())
             if 1 <= idx <= len(options):
                 return options[idx - 1]
-            print(f"⚠️  Please choose between 1 and {len(options)}.")
+            print(f" Please choose between 1 and {len(options)}.")
         except ValueError:
-            print("⚠️  Invalid input. Please enter a number.")
+            print(" Invalid input. Please enter a number.")
 
-
-# ============================================================
 #   STUDENT CHECK-IN
-# ============================================================
 def collect_feedback(reg_no, college_name):
     print("\n" + "=" * 60)
     print("       MENTAL HEALTH CHECK-IN PORTAL  (Student)")
@@ -172,13 +162,13 @@ def collect_feedback(reg_no, college_name):
 
     ca = get_int("\nYour last CA / exam score (%): ", 0, 100)
 
-    # Emotion question (Hinglish)
+    # Emotion question 
     emotion = get_choice(
         "\nAaj aapko sabse zyada kaunsa emotion feel ho raha hai?",
         ["Happy", "Sad", "Angry", "Anxious", "Tired", "Lonely", "Excited", "Calm", "Confused"]
     )
 
-    # Reason question — OPTIONAL, only if user is NOT happy
+    # Reason question  OPTIONAL, only if user is not happy
     reason = ""
     if emotion.lower() != "happy" and mood <= 6:
         reason = input(
@@ -204,9 +194,7 @@ def collect_feedback(reg_no, college_name):
     }
 
 
-# ============================================================
 #   SAVE STUDENT RECORD
-# ============================================================
 def save_student_record(data, status, score):
     record = {**data, "status": status, "risk_score": score}
 
@@ -224,9 +212,7 @@ def save_student_record(data, status, score):
         json.dump(existing, f, indent=2)
 
 
-# ============================================================
 #   STUDENT INTERFACE
-# ============================================================
 def student_interface(reg_no, college_name):
     while True:
         data = collect_feedback(reg_no, college_name)
@@ -239,14 +225,14 @@ def student_interface(reg_no, college_name):
         if reasons:
             print("Signals noticed: " + ", ".join(reasons))
         else:
-            print("No concerning signals detected. Keep it up! 💪")
+            print("No concerning signals detected. Keep it up! ")
 
         if status == "HIGH_CONCERN":
-            print("\n💙 We care about you. Please consider talking to a counselor.")
+            print("\n We care about you. Please consider talking to a counselor.")
             print("   iCall: 91XXXXXX21 | NEXUS: 98XXXXXX26 | Tele-Nexus: 14001")
             send_alert_to_admin(data, status, score, reasons)
         elif status == "MODERATE_CONCERN":
-            print("\n💛 Take care of yourself. A short chat with a friend may help.")
+            print("\n Take care of yourself. A short chat with a friend may help.")
             send_alert_to_admin(data, status, score, reasons)
 
         print("-" * 60)
@@ -256,7 +242,7 @@ def student_interface(reg_no, college_name):
             print("\nReturning to main menu...\n")
             break
 
-        # ✅ ASK FOR NEW REGISTRATION NUMBER AND COLLEGE NAME FOR NEXT STUDENT
+        #  ASK FOR NEW REGISTRATION NUMBER AND COLLEGE NAME FOR NEXT STUDENT
         reg_no = input("ENTER YOUR COLLEGE/SCHOOL/UNIVERSITY REGISTRATION NUMBER: ").strip()
         if reg_no == "":
             reg_no = "Anonymous"
@@ -265,16 +251,14 @@ def student_interface(reg_no, college_name):
             college_name = "Not mentioned"
 
 
-# ============================================================
 #   ADMIN INTERFACE
-# ============================================================
 def admin_interface():
     print("\n" + "=" * 60)
     print("            ADMIN DASHBOARD")
     print("=" * 60)
 
     if not os.path.exists(STUDENT_DB):
-        print("⚠️  No student records found yet.")
+        print(" No student records found yet.")
         input("\nPress Enter to return to main menu...")
         return
 
@@ -282,7 +266,7 @@ def admin_interface():
         with open(STUDENT_DB, "r", encoding="utf-8") as f:
             records = json.load(f)
     except Exception as e:
-        print("❌ Could not read student database:", e)
+        print(" Could not read student database:", e)
         input("\nPress Enter to return to main menu...")
         return
 
@@ -344,14 +328,11 @@ def admin_interface():
                     for line in f:
                         print(line.rstrip())
             except Exception as e:
-                print("❌ Could not read alert log:", e)
+                print(" Could not read alert log:", e)
 
     input("\nPress Enter to return to main menu...")
 
-
-# ============================================================
 #   MAIN MENU (Two Interfaces)
-# ============================================================
 def main_menu():
     while True:
         print("\n" + "=" * 60)
@@ -368,7 +349,7 @@ def main_menu():
             aaa = input("ENTER YOUR COLLEGE/SCHOOL/UNIVERSITY REGISTRATION NUMBER: ").strip()
             if aaa == "":
                 aaa = "Anonymous"
-            # ✅ COLLEGE NAME JUST AFTER REGISTRATION NUMBER
+            # COLLEGE NAME JUST AFTER REGISTRATION NUMBER
             college = input("ENTER YOUR SCHOOL/COLLEGE/UNIVERSITY NAME: ").strip()
             if college == "":
                 college = "Not mentioned"
@@ -388,14 +369,12 @@ def main_menu():
                     print("Thank you")
 
         elif choice == "3":
-            print("\nGoodbye! Take care. 💙")
+            print("\nGoodbye! Take care.")
             break
         else:
-            print("⚠️  Invalid choice. Please enter 1, 2, or 3.")
+            print(" Invalid choice. Please enter 1, 2, or 3.")
 
 
-# ============================================================
 #   ENTRY POINT
-# ============================================================
 if __name__ == "__main__":
     main_menu()
